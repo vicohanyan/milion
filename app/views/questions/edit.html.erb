@@ -1,0 +1,19 @@
+<h1>Edit question</h1>
+<%= form_for :questions, url: question_path(@questions), method: :patch do |question| %>
+  <% if @questions.errors.any? %>
+    <% @questions.errors.full_messages.each do |message| %>
+      <div style="color:red"><%= message %></div>
+    <% end %>
+  <% end %>
+  <p>
+    <label>question</label>
+    <%= question.text_field :text %>
+  </p>
+  <p>
+    <label>score</label>
+    <%= question.number_field :score %>
+  </p>
+  <p> <%= question.submit %></p>
+  <p> <%= link_to "go home", {controller: 'questions'} %></p>
+  <p> <%= link_to "Start Game", root_path %></p>
+<% end %>

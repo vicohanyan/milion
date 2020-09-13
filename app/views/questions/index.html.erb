@@ -1,0 +1,13 @@
+<h1>All questions</h1>
+<div>
+  <% @questions.each do |question| %>
+    <div style="display: flex;ustify-content: center">
+      <b><%=question.text %></b>  - score: <%=question.score %>
+      <%= button_to "edit",edit_question_path(question),{:method => :get} %>
+      <%= button_to "view",question,{ :action => 'show' , :controller => "questions",:method => :get} %>
+      <%= button_to("Delete", question, {:onclick => "return confirm('Are you sure?')", :method => :delete, :remote => true}) %>
+    </div>
+  <% end %>
+</div>
+<%= link_to "create question",{ :action => 'new' , :controller => "questions"} %>
+<%= link_to "Start Game", root_path %>

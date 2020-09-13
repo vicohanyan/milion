@@ -1,0 +1,42 @@
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+<h1> View question </h1>
+<p>question: <%= @questions.text %></p>
+<p>score:    <%= @questions.score %></p>
+<div>
+  <h4>Answers</h4>
+  <table style="text-align: center">
+    <thead>
+    <tr>
+      <th>answer</th>
+      <th>is true answer</th>
+      <th></th>
+    </tr>
+    </thead>
+    <% @answers.each do |answer| %>
+      <tr>
+        <td><%= answer.text %></td>
+        <td>
+          <% if answer.is_true == 1 %>
+            <p style="color: green">Yes</p>
+          <% else %>
+            <p style="color: red">No</p>
+          <% end %>
+        </td>
+        <td>
+          <%= button_to "edit",{ :action => 'edit' , :controller => "answers",:id => answer.id}, :method => :get %>
+          <%= button_to "delete",{ :action => 'destroy' , :controller => "answers",:id => answer.id}, {:onclick => "return confirm('Are you sure?')", :method => :delete, :remote => true} %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <%= link_to "add new answer",{ :action => 'new' , :controller => "answers",:question_id => @questions.id} %>
+
+
+</div>
+<br>
+<p> <%= link_to "go home", {controller: 'questions'} %></p>
+<p> <%= link_to "Start Game", root_path %></p>

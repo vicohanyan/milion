@@ -1,0 +1,53 @@
+<html>
+<head>
+  <style>
+    li {
+        list-style: none;
+    }
+    .right{
+        color: green;
+    }
+    .wrong{
+        color: red;
+    }
+    .right_answer{
+        color:green;
+        font-size: larger;
+    }
+    .wrong_answer{
+        color:red;
+        font-size: larger;
+    }
+  </style>
+</head>
+<body>
+
+<%= @right_answer.include? @selected_answer%>
+
+<h1>Game <%= params[:game_id] %></h1>
+<h2><%= @question[0].text %></h2>
+<br>
+<% if @right_answer.map{|a| a.id}.include? @selected_answer  %>
+  <h4 class="right">Your answer is right</h4>
+<% else %>
+  <h4 class="wrong">Your answer is wrong</h4>
+<% end %>
+<ul>
+  <% @answers.each do |answer| %>
+    <li
+      <% if @right_answer.map{|a| a.id}.include? answer.id.to_i%>
+      class = "right_answer"
+      <%elsif @selected_answer.to_i == answer.id.to_i %>
+      class = "wrong_answer"
+      <%end %>
+    >
+      <%=  answer.text  %>
+    </li>
+  <% end %>
+</ul>
+<br>
+<a>
+  <%= link_to "Next", { :controller => :game, :action => :start, :game_id => params[:game_id] } %>
+</a>
+</body>
+</html>

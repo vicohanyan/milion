@@ -1,0 +1,25 @@
+<html>
+<head>
+  <style>
+      li {
+          list-style: none;
+      }
+  </style>
+</head>
+<body>
+<h1>Game <%= @game_id %></h1>
+<h2><%= @question[0].text %></h2>
+<br>
+<h4> select right answer</h4>
+<ul>
+  <% @answers.each do |answer| %>
+    <li><%= link_to answer.text ,{ :controller => :game, :action => :set_answer , :answer_id =>answer.id ,:question_id => @question[0].id, :game_id => @game_id, :set => true} %></li>
+  <% end %>
+</ul>
+
+<br>
+<a>
+  <%= link_to "Go Home", { :controller => :game, :action => :index } %>
+</a>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<h1>edit Answer</h1>
+
+<%= form_for :answers, :url => {:controller => :answers, :action => :update}, method: :patch do |answer| %>
+  <% if @answers.errors.any? %>
+    <% @answers.errors.full_messages.each do |message| %>
+      <div style="color:red"><%= message %></div>
+    <% end %>
+  <% end %>
+  <p>
+    <label>answer</label>
+    <%= answer.text_field :text %>
+  </p>
+  <p>
+    <label>Is true answer</label>
+    <%= answer.check_box :is_true %>
+  </p>
+  <%=@answers.question_id %>
+  <%= answer.hidden_field :question_id, :value => @answers.question_id %>
+
+  <p> <%= answer.submit %></p>
+  <p> <%= link_to "go home", {controller: 'questions'} %></p>
+  <p> <%= link_to "Start Game", root_path %></p>
+
+<% end %>

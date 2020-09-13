@@ -21,13 +21,10 @@
   </style>
 </head>
 <body>
-
-<%= @right_answer.include? @selected_answer%>
-
 <h1>Game <%= params[:game_id] %></h1>
 <h2><%= @question[0].text %></h2>
 <br>
-<% if @right_answer.map{|a| a.id}.include? @selected_answer  %>
+<% if @right_answer.map{|a| a.id}.include? @selected_answer.to_i  %>
   <h4 class="right">Your answer is right</h4>
 <% else %>
   <h4 class="wrong">Your answer is wrong</h4>

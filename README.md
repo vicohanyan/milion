@@ -21,19 +21,3 @@ Things you may want to cover:
 
 * Deployment instructions
 
-
-### IMPORTANT
-```
-for run this app please use postgresql and import database.sql (DB dump) file in your database
-```
-
-
-
-Hello dear STDev HR,
-
-I am finished first part of work and send github link.
-I will continue to work on this project and you can get it from this link 
-https://github.com/vikohanyan/milion.git 
-Best regards, 
-
-Victor

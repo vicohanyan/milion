@@ -25,7 +25,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.answers (
-    answer_id integer NOT NULL,
+    id integer NOT NULL,
     question_id integer NOT NULL,
     is_true smallint,
     text text
@@ -53,7 +53,42 @@ ALTER TABLE public.answers_answer_id_seq OWNER TO postgres;
 -- Name: answers_answer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.answers_answer_id_seq OWNED BY public.answers.answer_id;
+ALTER SEQUENCE public.answers_answer_id_seq OWNED BY public.answers.id;
+
+
+--
+-- Name: online; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.online (
+    user_id integer NOT NULL,
+    token character varying(16),
+    "timestamp" timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.online OWNER TO postgres;
+
+--
+-- Name: online_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.online_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.online_user_id_seq OWNER TO postgres;
+
+--
+-- Name: online_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.online_user_id_seq OWNED BY public.online.user_id;
 
 
 --
@@ -61,7 +96,7 @@ ALTER SEQUENCE public.answers_answer_id_seq OWNED BY public.answers.answer_id;
 --
 
 CREATE TABLE public.questions (
-    question_id integer NOT NULL,
+    id integer NOT NULL,
     text text,
     score integer
 );
@@ -88,7 +123,7 @@ ALTER TABLE public.questions_question_id_seq OWNER TO postgres;
 -- Name: questions_question_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.questions_question_id_seq OWNED BY public.questions.question_id;
+ALTER SEQUENCE public.questions_question_id_seq OWNED BY public.questions.id;
 
 
 --
@@ -111,9 +146,8 @@ ALTER TABLE public.user_game OWNER TO postgres;
 
 CREATE TABLE public.users (
     user_id integer NOT NULL,
-    rating integer,
     username text,
-    password character varying(100)
+    password character varying(64)
 );
 
 
@@ -142,17 +176,24 @@ ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
 
 
 --
--- Name: answers answer_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: answers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.answers ALTER COLUMN answer_id SET DEFAULT nextval('public.answers_answer_id_seq'::regclass);
+ALTER TABLE ONLY public.answers ALTER COLUMN id SET DEFAULT nextval('public.answers_answer_id_seq'::regclass);
 
 
 --
--- Name: questions question_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: online user_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.questions ALTER COLUMN question_id SET DEFAULT nextval('public.questions_question_id_seq'::regclass);
+ALTER TABLE ONLY public.online ALTER COLUMN user_id SET DEFAULT nextval('public.online_user_id_seq'::regclass);
+
+
+--
+-- Name: questions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.questions ALTER COLUMN id SET DEFAULT nextval('public.questions_question_id_seq'::regclass);
 
 
 --
@@ -184,98 +225,58 @@ INSERT INTO public.answers VALUES (15, 4, 0, 'answer 4.3');
 INSERT INTO public.answers VALUES (16, 5, 1, 'answer 5.0');
 INSERT INTO public.answers VALUES (17, 5, 0, 'answer 5.1');
 INSERT INTO public.answers VALUES (18, 5, 0, 'answer 5.2');
+INSERT INTO public.answers VALUES (28, 2, 1, 'answer 2.3');
+
+
+--
+-- Data for Name: online; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
 -- Data for Name: questions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.questions VALUES (2, 'question 2', 5);
-INSERT INTO public.questions VALUES (1, 'question 1', 5);
 INSERT INTO public.questions VALUES (3, 'question 3', 10);
 INSERT INTO public.questions VALUES (5, 'question 5', 20);
 INSERT INTO public.questions VALUES (4, 'question 4', 15);
+INSERT INTO public.questions VALUES (1, 'question 1', 6);
+INSERT INTO public.questions VALUES (2, 'question 2', 5);
 
 
 --
 -- Data for Name: user_game; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.user_game VALUES (1, 1, 1, 2);
-INSERT INTO public.user_game VALUES (1, 4, 1, 14);
-INSERT INTO public.user_game VALUES (1, 2, 1, 7);
-INSERT INTO public.user_game VALUES (1, 5, 1, 17);
-INSERT INTO public.user_game VALUES (2, 1, 1, 2);
-INSERT INTO public.user_game VALUES (2, 3, 1, 9);
-INSERT INTO public.user_game VALUES (2, 4, 1, 14);
-INSERT INTO public.user_game VALUES (2, 2, 1, 7);
-INSERT INTO public.user_game VALUES (2, 5, 1, 18);
-INSERT INTO public.user_game VALUES (3, 2, 1, 7);
-INSERT INTO public.user_game VALUES (3, 1, 1, 1);
-INSERT INTO public.user_game VALUES (3, 5, 1, 17);
-INSERT INTO public.user_game VALUES (3, 3, 1, 11);
-INSERT INTO public.user_game VALUES (3, 4, 1, 15);
-INSERT INTO public.user_game VALUES (4, 4, 1, 13);
-INSERT INTO public.user_game VALUES (5, 5, 1, 16);
-INSERT INTO public.user_game VALUES (6, 5, 1, 16);
-INSERT INTO public.user_game VALUES (7, 3, 1, 9);
-INSERT INTO public.user_game VALUES (7, 5, 1, 18);
-INSERT INTO public.user_game VALUES (8, 1, 1, 4);
-INSERT INTO public.user_game VALUES (8, 5, 1, 17);
-INSERT INTO public.user_game VALUES (8, 3, 1, 10);
-INSERT INTO public.user_game VALUES (8, 4, 1, 12);
-INSERT INTO public.user_game VALUES (8, 2, 1, 6);
-INSERT INTO public.user_game VALUES (9, 3, 1, 8);
-INSERT INTO public.user_game VALUES (9, 1, 1, 2);
-INSERT INTO public.user_game VALUES (9, 5, 1, 17);
-INSERT INTO public.user_game VALUES (9, 2, 1, 6);
-INSERT INTO public.user_game VALUES (9, 4, 1, 14);
-INSERT INTO public.user_game VALUES (10, 4, 1, 14);
-INSERT INTO public.user_game VALUES (10, 5, 1, 16);
-INSERT INTO public.user_game VALUES (10, 1, 1, 3);
-INSERT INTO public.user_game VALUES (10, 2, 1, 6);
-INSERT INTO public.user_game VALUES (10, 3, 1, 9);
-INSERT INTO public.user_game VALUES (11, 1, 1, 1);
-INSERT INTO public.user_game VALUES (11, 3, 1, 9);
-INSERT INTO public.user_game VALUES (11, 2, 1, 7);
-INSERT INTO public.user_game VALUES (11, 5, 1, 17);
-INSERT INTO public.user_game VALUES (11, 4, 1, 14);
-INSERT INTO public.user_game VALUES (12, 2, 1, 6);
-INSERT INTO public.user_game VALUES (12, 5, 1, 17);
-INSERT INTO public.user_game VALUES (12, 1, 1, 2);
-INSERT INTO public.user_game VALUES (12, 3, 1, 10);
-INSERT INTO public.user_game VALUES (12, 4, 1, 15);
-INSERT INTO public.user_game VALUES (13, 1, 1, 3);
-INSERT INTO public.user_game VALUES (13, 3, 1, 8);
-INSERT INTO public.user_game VALUES (13, 2, 1, 7);
-INSERT INTO public.user_game VALUES (13, 5, 1, 16);
-INSERT INTO public.user_game VALUES (13, 4, 1, 14);
-INSERT INTO public.user_game VALUES (14, 2, 1, 6);
-INSERT INTO public.user_game VALUES (14, 3, 1, 9);
-INSERT INTO public.user_game VALUES (14, 5, 1, 16);
-INSERT INTO public.user_game VALUES (14, 4, 1, 12);
-INSERT INTO public.user_game VALUES (14, 1, 1, 1);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users VALUES (1, 2, 'a', 'd');
+INSERT INTO public.users VALUES (1, 'a', 'd');
 
 
 --
 -- Name: answers_answer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.answers_answer_id_seq', 18, true);
+SELECT pg_catalog.setval('public.answers_answer_id_seq', 28, true);
+
+
+--
+-- Name: online_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.online_user_id_seq', 1, false);
 
 
 --
 -- Name: questions_question_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.questions_question_id_seq', 5, true);
+SELECT pg_catalog.setval('public.questions_question_id_seq', 18, true);
 
 
 --
@@ -290,7 +291,15 @@ SELECT pg_catalog.setval('public.users_user_id_seq', 1, false);
 --
 
 ALTER TABLE ONLY public.answers
-    ADD CONSTRAINT answers_pk PRIMARY KEY (answer_id);
+    ADD CONSTRAINT answers_pk PRIMARY KEY (id);
+
+
+--
+-- Name: online online_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.online
+    ADD CONSTRAINT online_pk PRIMARY KEY (user_id);
 
 
 --
@@ -298,7 +307,7 @@ ALTER TABLE ONLY public.answers
 --
 
 ALTER TABLE ONLY public.questions
-    ADD CONSTRAINT questions_pk PRIMARY KEY (question_id);
+    ADD CONSTRAINT questions_pk PRIMARY KEY (id);
 
 
 --
@@ -321,14 +330,21 @@ ALTER TABLE ONLY public.users
 -- Name: answers_answer_id_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX answers_answer_id_uindex ON public.answers USING btree (answer_id);
+CREATE UNIQUE INDEX answers_answer_id_uindex ON public.answers USING btree (id);
+
+
+--
+-- Name: online_user_id_uindex; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX online_user_id_uindex ON public.online USING btree (user_id);
 
 
 --
 -- Name: questions_question_id_uindex; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX questions_question_id_uindex ON public.questions USING btree (question_id);
+CREATE UNIQUE INDEX questions_question_id_uindex ON public.questions USING btree (id);
 
 
 --
@@ -350,7 +366,15 @@ CREATE UNIQUE INDEX users_username_uindex ON public.users USING btree (username)
 --
 
 ALTER TABLE ONLY public.answers
-    ADD CONSTRAINT answers_questions_question_id_fk FOREIGN KEY (question_id) REFERENCES public.questions(question_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT answers_questions_question_id_fk FOREIGN KEY (question_id) REFERENCES public.questions(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: online online_users_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.online
+    ADD CONSTRAINT online_users_user_id_fk FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -358,7 +382,7 @@ ALTER TABLE ONLY public.answers
 --
 
 ALTER TABLE ONLY public.user_game
-    ADD CONSTRAINT user_game_answers_answer_id_fk FOREIGN KEY (answer_id) REFERENCES public.answers(answer_id);
+    ADD CONSTRAINT user_game_answers_answer_id_fk FOREIGN KEY (answer_id) REFERENCES public.answers(id);
 
 
 --
@@ -366,7 +390,7 @@ ALTER TABLE ONLY public.user_game
 --
 
 ALTER TABLE ONLY public.user_game
-    ADD CONSTRAINT user_game_questions_question_id_fk FOREIGN KEY (question_id) REFERENCES public.questions(question_id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT user_game_questions_question_id_fk FOREIGN KEY (question_id) REFERENCES public.questions(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

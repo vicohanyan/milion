@@ -1,5 +1,5 @@
-class QuestionsController < ActionController::Base
-    http_basic_authenticate_with name: "admin", password: "admin"
+class QuestionsController < ApplicationController
+    before_action :authenticate_user!, except: [:index, :show]
     def index
         @questions = Questions.all
     end

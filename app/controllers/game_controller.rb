@@ -1,4 +1,5 @@
-class GameController < ActionController::Base
+class GameController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   def index
   end
 
@@ -21,7 +22,13 @@ class GameController < ActionController::Base
 
   def set_answer
     if params[:set] == 'true'
-      object = Game.new(:game_id => params[:game_id], :question_id => params[:question_id], :answer_id => params[:answer_id], :user_id => 1)
+      session_user_id = session[:"warden.user.user.key"][0][0].to_i
+      old_game = Game.where(question_id: params[:question_id],game_id: params[:game_id])[0]
+      if old_game.blank?
+        object = Game.new(:game_id => params[:game_id], :question_id => params[:question_id], :answer_id => params[:answer_id], :user_id => session_user_id)
+      else
+        object = Game.update(old_game.id,:game_id => params[:game_id], :question_id => params[:question_id], :answer_id => params[:answer_id], :user_id => session_user_id)
+      end
       object.save
     end
     @question = Questions.find_by_sql("SELECT id,text FROM questions WHERE id = " + params[:question_id] + " LIMIT 1;")
@@ -37,6 +44,23 @@ class GameController < ActionController::Base
                                         INNER JOIN answers   ON answers.id          = user_game.answer_id AND answers.is_true = 1
                                         WHERE game_id = " + params[:game_id] + ";" )[0]['score']
     render "finish", :score => @score
+  end
+
+  def statistic
+    @statistic = Game.find_by_sql("
+                                  SELECT users.id,users.email,users_score.score
+                                  FROM (SELECT user_id, MAX(score) AS score
+                                        FROM (SELECT user_id, SUM(score) AS score
+                                              FROM user_game
+                                                       INNER JOIN answers ON user_game.answer_id = answers.id AND answers.is_true = 1
+                                                       INNER JOIN questions ON questions.id = answers.question_id
+                                              GROUP BY game_id, user_id
+                                              ORDER BY score DESC) AS data
+                                        GROUP BY data.user_id
+                                        LIMIT 10) AS users_score
+                                           LEFT JOIN users ON users.id = users_score.user_id
+                                  WHERE id IS NOT NULL
+                                  ")
   end
 
 end

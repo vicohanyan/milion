@@ -1,0 +1,24 @@
+<h1>Best Scores </h1>
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+<table>
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>email</th>
+    <th>score </th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @statistic.each_with_index do |s,index| %>
+  <tr data-id="s.id">
+    <td><%=index+1 %></td>
+    <td><%=s.email %></td>
+    <td><%=s.score %></td>
+  </tr>
+  <% end %>
+  </tbody>
+</table>

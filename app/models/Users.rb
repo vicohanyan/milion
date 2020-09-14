@@ -1,5 +1,6 @@
 class Users < ApplicationRecord
-  has_secure_password
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
   validates :username,   uniqueness: true
   def create
     @user = Users.new(params.require(:user).permit(:username,:password))
@@ -8,13 +9,13 @@ class Users < ApplicationRecord
   end
 
 
-  def current_user
-    Users.find_by(id: session[:user_id])
-  end
-
-  def logged_in?
-    !current_user.nil?
-  end
+  # def current_user
+  #   Users.find_by(id: session[:"warden.user.user.key"][0])
+  # end
+  #
+  # def logged_in?
+  #   !current_user.nil?
+  # end
 
 
 end

@@ -4,12 +4,23 @@
     <title>Untitled</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= javascript_include_tag "application" %>
+    <%#= javascript_include_tag "application" %>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%#= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
+  <ul class="dropdown-menu">
+      <%#= current_user.inspect %>
+      <%#= current_user.blank? %>
+    <% if session[:"warden.user.user.key"].nil? %>
+      <li><%= link_to "Sign up", new_user_registration_path %></li>
+      <li><%= link_to "Login", new_user_session_path %></li>
+    <% else %>
+      <%=  button_to("Logout", destroy_user_session_path, {:method => :delete, :remote => true}) %>
+    <% end %>
+
+  </ul>
     <%= yield %>
   </body>
 </html>
